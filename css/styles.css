@@ -12,6 +12,7 @@
 
   /* Menorah and flame variables */
   --menorah-base-color: #c2a366;
+  --menorah-silver-color: silver;
   --candle-color: #fffbe8;
   --flame-color: #ffce3a;
   --flame-color-hover: #fff538;
@@ -20,7 +21,7 @@
   /* Colors for letters (festive palette) */
   --color1: #f44336; /* Red */
   --color2: #ff9800; /* Orange */
-  --color3: #ffeb3b; /* Yellow */
+  --color3: #f8d302fd; /* Yellow */
   --color4: #4caf50; /* Green */
   --color5: #2196f3; /* Blue */
   --color6: #9c27b0; /* Purple */
@@ -541,7 +542,21 @@ body {
   height: 20px;
   background-color: var(--menorah-base-color);
   border-radius: 10px;
-  margin: 2rem 1rem 2rem;
+  margin: 0rem 1rem 2rem;
+}
+.menorah__base__silver {
+  width: 260px;
+  height: 20px;
+  background-color: var(--menorah-silver-color);
+  border-radius: 1rem;
+  margin: 0 auto;
+}
+.menorah__leg__silver {
+  width: 60px;
+  height: 60px;
+  background-color: var(--menorah-silver-color);
+  border-radius: 0px;
+  margin: 0 auto;
 }
 
 /* Candles container */

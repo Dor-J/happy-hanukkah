@@ -1,7 +1,5 @@
 'use strrict'
 
-import { HDate } from 'hebcal'
-
 // Immediately run once the DOM is parsed
 document.addEventListener('DOMContentLoaded', () => {
   // 1) Get references to candle elements
