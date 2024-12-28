@@ -80,6 +80,7 @@ body {
   flex-direction: column;
   align-items: center;
   height: 100%;
+  max-width: 200px;
 }
 
 .layout__main {
@@ -533,7 +534,7 @@ body {
   width: 100%;
   max-width: 800px;
   text-align: center;
-  margin-bottom: 3rem;
+  margin: 0rem auto 2rem;
 }
 
 /* Base of the Menorah */
@@ -542,7 +543,7 @@ body {
   height: 20px;
   background-color: var(--menorah-base-color);
   border-radius: 10px;
-  margin: 0rem 1rem 2rem;
+  margin: 0rem auto 2rem;
 }
 .menorah__base__silver {
   width: 260px;
@@ -668,6 +669,27 @@ body {
   :root {
     --arch-radius: 80px; /* smaller radius for smaller screens */
     --arch-radius-he: 110px;
+  }
+
+  .layout {
+    /* Side nav: ~200px, main fills remainder */
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 6fr;
+    min-height: 100vh; /* full viewport height */
+
+    .layout__sidebar {
+      order: 2;
+      min-width: 100%;
+      height: 20px;
+    }
+  }
+
+  .ltr {
+    font-size: 1.5rem;
+  }
+  .site-header,
+  .site-footer {
+    max-height: 6rem;
   }
 
   .candle {
