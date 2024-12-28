@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/styles.css" />
+    <!-- 1) Load Hebcal from unpkg CDN (UMD build) -->
+    <title>Happy Hanukkah Menorah</title>
+  </head>
+  <body>
+    <div class="layout">
+      <!-- SIDEBAR NAVIGATION -->
+      <aside class="layout__sidebar">
+        <nav class="side-nav">
+          <h2>Navigation</h2>
+          <!-- Language Toggle -->
+          <button id="lang-toggle" class="lang-toggle-btn">
+            Switch to Hebrew
+          </button>
+          <!-- Could add more nav links or info here -->
+        </nav>
+      </aside>
+
+      <!-- MAIN CONTENT -->
+      <main class="layout__main">
+        <header class="site-header">
+          <h1>Happy Hanukkah Menorah</h1>
+        </header>
+
+        <section class="lang-section">
+          <!-- Arch Container for Hebrew Text -->
+          <section class="arch-container arch-container-he lang-he">
+            <h2 class="arch-text arch-text-he">
+              <!-- 12 total chars: ח ג [space] ח נ ו כ ה [space] ש מ ח -->
+              <span class="ltr-he ltr-he-1">ח</span>
+              <span class="ltr-he ltr-he-2">ג</span>
+              <span class="ltr-he ltr-he-3"> </span>
+              <span class="ltr-he ltr-he-4">ח</span>
+              <span class="ltr-he ltr-he-5">נ</span>
+              <span class="ltr-he ltr-he-6">ו</span>
+              <span class="ltr-he ltr-he-7">כ</span>
+              <span class="ltr-he ltr-he-8">ה</span>
+              <span class="ltr-he ltr-he-9"> </span>
+              <span class="ltr-he ltr-he-10">ש</span>
+              <span class="ltr-he ltr-he-11">מ</span>
+              <span class="ltr-he ltr-he-12">ח</span>
+            </h2>
+          </section>
+
+          <!-- Arch Text Above Menorah for English Text-->
+          <section class="arch-container lang-en">
+            <h2 class="arch-text">
+              <span class="ltr ltr-1">H</span>
+              <span class="ltr ltr-2">a</span>
+              <span class="ltr ltr-3">p</span>
+              <span class="ltr ltr-4">p</span>
+              <span class="ltr ltr-5">y</span>
+              <span class="ltr ltr-6"> </span>
+              <span class="ltr ltr-7">H</span>
+              <span class="ltr ltr-8">a</span>
+              <span class="ltr ltr-9">n</span>
+              <span class="ltr ltr-10">u</span>
+              <span class="ltr ltr-11">k</span>
+              <span class="ltr ltr-12">k</span>
+              <span class="ltr ltr-13">a</span>
+              <span class="ltr ltr-14">h</span>
+            </h2>
+          </section>
+
+          <!-- Menorah Section -->
+          <section class="menorah">
+            <!-- Candles Container -->
+            <div class="menorah__candles">
+              <div class="menorah__candle-holder">
+                <!-- Example: .candle--off class for a 'not lit' candle -->
+                <div class="candle candle--1">
+                  <div class="candle__flame"></div>
+                </div>
+                <div class="candle candle--2">
+                  <div class="candle__flame"></div>
+                </div>
+                <div class="candle candle--3">
+                  <div class="candle__flame"></div>
+                </div>
+                <div class="candle candle--4">
+                  <div class="candle__flame"></div>
+                </div>
+                <div class="candle candle--shamash">
+                  <div class="candle__flame"></div>
+                </div>
+                <div class="candle candle--5">
+                  <div class="candle__flame"></div>
+                </div>
+                <div class="candle candle--6">
+                  <div class="candle__flame"></div>
+                </div>
+                <div class="candle candle--7">
+                  <div class="candle__flame"></div>
+                </div>
+                <div class="candle candle--8">
+                  <div class="candle__flame"></div>
+                </div>
+              </div>
+            </div>
+            <div class="menorah__base"></div>
+          </section>
+        </section>
+
+        <footer class="site-footer">
+          <p>&copy; 2024 Festive Hanukkah</p>
+        </footer>
+      </main>
+    </div>
+    <script src="https://unpkg.com/hebcal/dist/hebcal.js"></script>
+
+    <script src="js/script.js" defer></script>
+  </body>
+</html>

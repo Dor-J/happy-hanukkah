@@ -1,0 +1,670 @@
+/************************************
+  1. VARIABLES
+*************************************/
+:root {
+  /* Arch text variables */
+  --arch-radius: 14rem; /* distance from bottom center to each letter */
+  --arch-animation-duration: 0.7s;
+  --arch-animation-ease: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* Hebrew arch can have a slightly smaller radius if desired */
+  --arch-radius-he: 14rem;
+
+  /* Menorah and flame variables */
+  --menorah-base-color: #c2a366;
+  --candle-color: #fffbe8;
+  --flame-color: #ffce3a;
+  --flame-color-hover: #fff538;
+  --flame-glow-color: rgba(255, 206, 58, 0.5);
+
+  /* Colors for letters (festive palette) */
+  --color1: #f44336; /* Red */
+  --color2: #ff9800; /* Orange */
+  --color3: #ffeb3b; /* Yellow */
+  --color4: #4caf50; /* Green */
+  --color5: #2196f3; /* Blue */
+  --color6: #9c27b0; /* Purple */
+
+  --start-he: -10;
+  --end-he: -170;
+  --count-he: 11;
+  --range-he: calc(var(--end-he) - var(--start-he));
+
+  --start-en: -170;
+  --end-en: -10;
+  --count-en: 13;
+  --range-en: calc(var(--end-en) - var(--start-en));
+}
+
+/************************************
+    2. RESET/BASE STYLES
+  *************************************/
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+  font-family: sans-serif;
+  background: #f5f5f5;
+  color: #333;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/************************************
+  1. LAYOUT: GRID
+*************************************/
+.layout {
+  display: grid;
+  /* Side nav: ~200px, main fills remainder */
+  grid-template-columns: 1fr 6fr;
+  min-height: 100vh; /* full viewport height */
+}
+
+.layout__sidebar {
+  background: #fafafa;
+  border-right: 1px solid #ddd;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+}
+
+.layout__main {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Simple side nav styles */
+.side-nav h2 {
+  margin-block-start: 1rem;
+  margin-block-end: 1rem;
+}
+
+.lang-toggle-btn {
+  background-color: navy;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: 1rem;
+  border-radius: 2rem;
+  transition: background-color 0.4s ease-in-out, color 0.4s ease-in-out;
+  align-items: center;
+
+  &:hover {
+    background-color: lightskyblue;
+    color: #333;
+  }
+  &:active {
+    scale: 0.9;
+  }
+}
+
+/************************************
+    2. LANGUAGE TOGGLE
+       We'll show/hide text with .is-en or .is-heb
+  *************************************/
+.lang-section {
+  position: relative;
+  margin: auto;
+  min-width: 70vw;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 1fr 4rem;
+}
+
+/* By default, let's show both or hide both, 
+     then let JS pick which one is visible. 
+     We'll keep them both visible if no class set. */
+.lang-en,
+.lang-he {
+  display: none; /* hide both initially */
+}
+/* If .is-en => show English, hide Hebrew */
+.lang-section.is-en .lang-en {
+  display: block;
+}
+.lang-section.is-en .lang-he {
+  display: none;
+}
+/* If .is-heb => show Hebrew, hide English */
+.lang-section.is-heb .lang-he {
+  display: block;
+}
+.lang-section.is-heb .lang-en {
+  display: none;
+}
+
+/************************************
+    3. LAYOUT (HEADER, FOOTER, CONTENT)
+  *************************************/
+.site-header,
+.site-footer {
+  text-align: center;
+  padding: 1rem;
+  background: #fff;
+  min-width: 100%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  max-height: 4rem;
+}
+
+.site-content {
+  flex: 1;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/************************************
+    4. ARCH TEXT
+  *************************************/
+.arch-container {
+  position: relative;
+  width: 400px;
+  height: 200px;
+  margin: 2rem auto 3rem; /* spacing above menorah */
+}
+
+.arch-text {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Container for Hebrew arch */
+.arch-container-he {
+  position: relative;
+  width: 350px;
+  height: 180px;
+  margin: 2rem auto;
+}
+
+.arch-text-he {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* Common styles for each letter in the arch text */
+.ltr {
+  font-size: 2.5rem;
+
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform-origin: bottom center;
+
+  --arc-rotation: calc(
+    var(--start-en) + (var(--range-en) / var(--count-en)) * var(--i)
+  );
+
+  /* Provide both initial + final transform as custom props */
+  /* We'll define them differently for English vs. Hebrew if needed */
+  --initial-transform: translateX(100vw) rotate(0deg);
+  --final-transform: rotate(calc(var(--arc-rotation) * 1deg))
+    translate(var(--arch-radius-he))
+    rotate(calc(-1 * var(--arc-rotation) * 1deg));
+
+  /* Initial "fly-in" from right animation */
+  animation: comeIn var(--arch-animation-duration) var(--arch-animation-ease)
+    forwards;
+  opacity: 0; /* start invisible */
+
+  &:hover {
+    animation: shake 0.5s infinite;
+  }
+}
+
+/************************************
+  2. KEYFRAMES
+*************************************/
+/* English text: arrive from the right */
+@keyframes comeIn {
+  0% {
+    transform: var(--initial-transform);
+    opacity: 0;
+  }
+  100% {
+    transform: var(--final-transform);
+    opacity: 1;
+  }
+}
+
+/* Hebrew text: arrive from the left */
+@keyframes comeInHe {
+  0% {
+    transform: var(--initial-transform);
+    opacity: 0;
+  }
+  100% {
+    transform: var(--final-transform);
+    opacity: 1;
+  }
+}
+
+/* Shake on hover (same for both sets) */
+@keyframes shake {
+  0%,
+  100% {
+    transform: var(--final-transform) rotate(0deg);
+  }
+  25% {
+    transform: var(--final-transform) rotate(3deg);
+  }
+  50% {
+    transform: var(--final-transform) rotate(-3deg);
+  }
+  75% {
+    transform: var(--final-transform) rotate(3deg);
+  }
+}
+
+/* Distribute angles and colors for "Happy Hanukkah" (14 letters + space) */
+.ltr-1 {
+  --i: 0;
+  --arc-rotation: calc(
+    var(--start-en) + (var(--range-en) / var(--count-en)) * var(--i)
+  );
+  animation-delay: 0s;
+  color: var(--color1);
+}
+.ltr-2 {
+  --i: 1;
+  --arc-rotation: calc(
+    var(--start-en) + (var(--range-en) / var(--count-en)) * var(--i)
+  );
+  animation-delay: 0.05s;
+  color: var(--color2);
+}
+.ltr-3 {
+  --i: 2;
+  --arc-rotation: calc(
+    var(--start-en) + (var(--range-en) / var(--count-en)) * var(--i)
+  );
+  animation-delay: 0.1s;
+  color: var(--color3);
+}
+.ltr-4 {
+  --i: 3;
+  --arc-rotation: calc(
+    var(--start-en) + (var(--range-en) / var(--count-en)) * var(--i)
+  );
+  animation-delay: 0.15s;
+  color: var(--color4);
+}
+.ltr-5 {
+  --i: 4;
+  --arc-rotation: calc(
+    var(--start-en) + (var(--range-en) / var(--count-en)) * var(--i)
+  );
+  animation-delay: 0.2s;
+  color: var(--color5);
+}
+.ltr-6 {
+  --i: 5;
+  --arc-rotation: calc(
+    var(--start-en) + (var(--range-en) / var(--count-en)) * var(--i)
+  );
+  animation-delay: 0.25s;
+  color: var(--color6);
+}
+.ltr-7 {
+  --i: 6;
+  --arc-rotation: calc(
+    var(--start-en) + (var(--range-en) / var(--count-en)) * var(--i)
+  );
+  animation-delay: 0.3s;
+  color: var(--color1);
+}
+.ltr-8 {
+  --i: 7;
+  --arc-rotation: calc(
+    var(--start-en) + (var(--range-en) / var(--count-en)) * var(--i)
+  );
+  animation-delay: 0.35s;
+  color: var(--color2);
+}
+.ltr-9 {
+  --i: 8;
+  --arc-rotation: calc(
+    var(--start-en) + (var(--range-en) / var(--count-en)) * var(--i)
+  );
+  animation-delay: 0.4s;
+  color: var(--color3);
+}
+.ltr-10 {
+  --i: 9;
+  --arc-rotation: calc(
+    var(--start-en) + (var(--range-en) / var(--count-en)) * var(--i)
+  );
+  animation-delay: 0.45s;
+  color: var(--color4);
+}
+.ltr-11 {
+  --i: 10;
+  --arc-rotation: calc(
+    var(--start-en) + (var(--range-en) / var(--count-en)) * var(--i)
+  );
+  animation-delay: 0.5s;
+  color: var(--color5);
+}
+.ltr-12 {
+  --i: 11;
+  --arc-rotation: calc(
+    var(--start-en) + (var(--range-en) / var(--count-en)) * var(--i)
+  );
+  animation-delay: 0.55s;
+  color: var(--color6);
+}
+.ltr-13 {
+  --i: 12;
+  --arc-rotation: calc(
+    var(--start-en) + (var(--range-en) / var(--count-en)) * var(--i)
+  );
+  animation-delay: 0.6s;
+  color: var(--color1);
+}
+.ltr-14 {
+  --i: 13;
+  --arc-rotation: calc(
+    var(--start-en) + (var(--range-en) / var(--count-en)) * var(--i)
+  );
+  animation-delay: 0.65s;
+  color: var(--color2);
+}
+
+/************************************
+  4. ARCH TEXT (HEBREW)
+*************************************/
+
+/* Hebrew letters: same comeIn, but we define new classes for angles, etc. */
+.ltr-he {
+  font-size: 2.5rem;
+
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform-origin: bottom center;
+
+  --arc-rotation: calc(
+    var(--start-he) + (var(--range-he) / var(--count-he)) * var(--i)
+  );
+
+  /* Hebrew might come in from the left => initial x is -100vw */
+  --initial-transform: translateX(-100vw) rotate(0deg);
+  --final-transform: rotate(calc(var(--arc-rotation) * 1deg))
+    translate(var(--arch-radius-he))
+    rotate(calc(-1 * var(--arc-rotation) * 1deg));
+
+  animation: comeIn var(--arch-animation-duration) var(--arch-animation-ease)
+    forwards;
+  opacity: 0;
+
+  &:hover {
+    animation: shake 0.5s infinite;
+  }
+}
+
+/* “חג חנוכה שמח” => 12 total characters */
+/* We'll distribute angles from about -60deg to +60deg */
+.ltr-he-1 {
+  --i: 0;
+  --arc-rotation: calc(
+    var(--start-he) + (var(--range-he) / var(--count-he)) * var(--i)
+  );
+  animation-delay: 0s;
+  color: var(--color1);
+}
+.ltr-he-2 {
+  --i: 1;
+  --arc-rotation: calc(
+    var(--start-he) + (var(--range-he) / var(--count-he)) * var(--i)
+  );
+  animation-delay: 0.05s;
+  color: var(--color2);
+}
+.ltr-he-3 {
+  --i: 2;
+  --arc-rotation: calc(
+    var(--start-he) + (var(--range-he) / var(--count-he)) * var(--i)
+  );
+  animation-delay: 0.1s;
+  color: var(--color3);
+}
+.ltr-he-4 {
+  --i: 3;
+  --arc-rotation: calc(
+    var(--start-he) + (var(--range-he) / var(--count-he)) * var(--i)
+  );
+  animation-delay: 0.15s;
+  color: var(--color4);
+}
+.ltr-he-5 {
+  --i: 4;
+  --arc-rotation: calc(
+    var(--start-he) + (var(--range-he) / var(--count-he)) * var(--i)
+  );
+  animation-delay: 0.2s;
+  color: var(--color5);
+}
+.ltr-he-6 {
+  --i: 5;
+  --arc-rotation: calc(
+    var(--start-he) + (var(--range-he) / var(--count-he)) * var(--i)
+  );
+  animation-delay: 0.25s;
+  color: var(--color6);
+}
+.ltr-he-7 {
+  --i: 6;
+  --arc-rotation: calc(
+    var(--start-he) + (var(--range-he) / var(--count-he)) * var(--i)
+  );
+  animation-delay: 0.3s;
+  color: var(--color1);
+}
+.ltr-he-8 {
+  --i: 7;
+  --arc-rotation: calc(
+    var(--start-he) + (var(--range-he) / var(--count-he)) * var(--i)
+  );
+  animation-delay: 0.35s;
+  color: var(--color2);
+}
+.ltr-he-9 {
+  --i: 8;
+  --arc-rotation: calc(
+    var(--start-he) + (var(--range-he) / var(--count-he)) * var(--i)
+  );
+  animation-delay: 0.4s;
+  color: var(--color3);
+}
+.ltr-he-10 {
+  --i: 9;
+  --arc-rotation: calc(
+    var(--start-he) + (var(--range-he) / var(--count-he)) * var(--i)
+  );
+  animation-delay: 0.45s;
+  color: var(--color4);
+}
+.ltr-he-11 {
+  --i: 10;
+  --arc-rotation: calc(
+    var(--start-he) + (var(--range-he) / var(--count-he)) * var(--i)
+  );
+  animation-delay: 0.5s;
+  color: var(--color5);
+}
+.ltr-he-12 {
+  --i: 11;
+  --arc-rotation: calc(
+    var(--start-he) + (var(--range-he) / var(--count-he)) * var(--i)
+  );
+  animation-delay: 0.55s;
+  color: var(--color6);
+}
+
+/************************************
+    5. MENORAH COMPONENT
+  *************************************/
+.menorah {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+/* Base of the Menorah */
+.menorah__base {
+  width: 100%;
+  height: 20px;
+  background-color: var(--menorah-base-color);
+  border-radius: 10px;
+  margin: 2rem 1rem 2rem;
+}
+
+/* Candles container */
+.menorah__candles {
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
+.menorah__candle-holder {
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
+}
+
+/* Candle */
+.candle {
+  position: relative;
+  width: 12px;
+  height: 100px;
+  background-color: var(--candle-color);
+  border-radius: 4px;
+  box-shadow: 0 0 1px #ccc;
+}
+
+/* Taller shamash */
+.candle--shamash {
+  height: 120px;
+}
+
+/* Flame element */
+.candle__flame {
+  position: absolute;
+  top: -10px;
+  left: -50%;
+  transform: translateX(-50%);
+  width: 14px;
+  height: 14px;
+  background: var(--flame-color);
+  border-radius: 50% 50% 50% 0;
+  box-shadow: 0 0 8px var(--flame-glow-color);
+  animation: flicker 1s infinite;
+  opacity: 1;
+  rotate: 135deg;
+
+  transition: scale 0.5s ease-in-out;
+
+  &:hover {
+    scale: 1.3;
+    background: var(--flame-color-hover);
+    border: 1px solid var(--flame-color);
+  }
+}
+
+/* Flicker animation (used for lit candles) */
+@keyframes flicker {
+  0%,
+  100% {
+    transform: translateX(-50%) scale(1);
+    box-shadow: 0 0 8px var(--flame-glow-color);
+    opacity: 1;
+  }
+  50% {
+    transform: translateX(-50%) scale(1.5);
+    box-shadow: 0 0 12px var(--flame-glow-color);
+    opacity: 0.8;
+  }
+}
+
+/* Not lit candle: Hide flame (optionally could use flame-off animation) */
+.candle--off .candle__flame {
+  display: none;
+}
+
+/************************************
+    6. EXTRA ANIMATIONS (NOT USED YET)
+       - flame on / flame off
+  *************************************/
+@keyframes flame-on {
+  0% {
+    opacity: 0;
+    transform: scale(0.5) translateX(-50%);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateX(-50%);
+  }
+}
+
+@keyframes flame-off {
+  0% {
+    opacity: 1;
+    transform: scale(1) translateX(-50%);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.5) translateX(-50%);
+  }
+}
+
+/************************************
+    7. RESPONSIVENESS
+  *************************************/
+@media (max-width: 600px) {
+  .arch-container {
+    width: 280px;
+    height: 160px;
+  }
+  :root {
+    --arch-radius: 80px; /* smaller radius for smaller screens */
+    --arch-radius-he: 110px;
+  }
+
+  .candle {
+    width: 8px;
+    height: 80px;
+  }
+  .candle--shamash {
+    height: 120px;
+  }
+  .candle__flame {
+    width: 10px;
+    height: 10px;
+    top: -7px;
+  }
+}
