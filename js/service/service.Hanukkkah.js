@@ -1,5 +1,6 @@
 'use strict'
 
+var gDayOfHanukkah = 0
 // Hanukkah dates for 2024–2042
 const hanukkahDates = [
   { year: 2024, start: '2024-12-25', end: '2025-01-01' },
@@ -41,7 +42,6 @@ const blessings = {
 function checkHanukkah() {
   const today = new Date()
   const todayString = today.toISOString().split('T')[0] // Get YYYY-MM-DD format
-  const container = document.getElementById('hanukkah-info') // Target container element
 
   for (const { year, start, end } of hanukkahDates) {
     const startDate = new Date(start)
@@ -51,22 +51,31 @@ function checkHanukkah() {
       const dayOfHanukkah = Math.floor(
         (today - startDate) / (1000 * 60 * 60 * 24) + 1
       )
+      if (gDayOfHanukkah === 0) {
+        updateDayOfHannukah(dayOfHanukkah)
+      }
 
-      // Add Hanukkah message and blessings to the container
-      container.innerHTML = `
-                <p>Today is Hanukkah! (${todayString}). It's Day ${dayOfHanukkah} of Hanukkah ${year}.</p>
-                <p><strong>Blessing in English:</strong></p>
-                <p>${blessings.english.join('<br>')}</p>
-                <p><strong>Blessing in Hebrew:</strong></p>
-                <p>${blessings.hebrew.join('<br>')}</p>
-            `
+      renderBlessing({
+        info: [todayString, dayOfHanukkah, year],
+        blEN: blessings.english,
+        blHE: blessings.hebrew,
+      })
+
       return
     }
   }
 
   // If not Hanukkah, display a message
-  container.innerHTML = `<p>Today (${todayString}) is not Hanukkah.</p>`
+  const elInfo = document.querySelector('.hanukkah-info .info')
+  elInfo.innerHTML = `<p>Today (${todayString}) is not Hanukkah.</p>`
 }
 
 // Call the function after the DOM is loaded
 document.addEventListener('DOMContentLoaded', checkHanukkah)
+
+function updateDayOfHannukah(dayOfHanukkah) {
+  gDayOfHanukkah = dayOfHanukkah
+}
+function getDayOfHannukah() {
+  return gDayOfHanukkah === 0 ? false : gDayOfHanukkah
+}
