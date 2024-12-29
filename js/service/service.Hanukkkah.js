@@ -1,6 +1,7 @@
 'use strict'
 
 var gDayOfHanukkah = 0
+var gDaysUntil = null
 // Hanukkah dates for 2024–2042
 const hanukkahDates = [
   { year: 2024, start: '2024-12-25', end: '2025-01-01' },
@@ -69,7 +70,24 @@ function checkHanukkah() {
   const elInfo = document.querySelector('.hanukkah-info .info')
   elInfo.innerHTML = `<p>Today (${todayString}) is not Hanukkah.</p>`
 }
+// Function to calculate days until the next Hanukkah
+function daysUntilHanukkah() {
+  const today = new Date()
 
+  for (const { year, start } of hanukkahDates) {
+    const startDate = new Date(start)
+    if (today <= startDate) {
+      const daysUntil = Math.ceil((startDate - today) / (1000 * 60 * 60 * 24))
+
+      gDaysUntil = daysUntil
+      return
+    }
+  }
+  gDaysUntil = null
+}
+
+// Call the function after the DOM is loaded
+document.addEventListener('DOMContentLoaded', daysUntilHanukkah)
 // Call the function after the DOM is loaded
 document.addEventListener('DOMContentLoaded', checkHanukkah)
 
@@ -78,4 +96,7 @@ function updateDayOfHannukah(dayOfHanukkah) {
 }
 function getDayOfHannukah() {
   return gDayOfHanukkah === 0 ? false : gDayOfHanukkah
+}
+function getDaysUntilHannukah() {
+  return !gDaysUntil ? gDaysUntil : false
 }
